@@ -58,6 +58,20 @@ class DefaultTextBlockStyle {
   /// Decoration, if present, is painted in the content area, excluding
   /// any [spacing].
   final BoxDecoration? decoration;
+
+  DefaultTextBlockStyle copyWith({
+    TextStyle? style,
+    VerticalSpacing? verticalSpacing,
+    VerticalSpacing? lineSpacing,
+    BoxDecoration? decoration,
+  }) {
+    return DefaultTextBlockStyle(
+      style ?? this.style,
+      verticalSpacing ?? this.verticalSpacing,
+      lineSpacing ?? this.lineSpacing,
+      decoration ?? this.decoration,
+    );
+  }
 }
 
 /// Theme data for inline code.
@@ -112,17 +126,11 @@ class InlineCodeStyle {
     if (other is! InlineCodeStyle) {
       return false;
     }
-    return other.style == style &&
-        other.header1 == header1 &&
-        other.header2 == header2 &&
-        other.header3 == header3 &&
-        other.backgroundColor == backgroundColor &&
-        other.radius == radius;
+    return other.style == style && other.header1 == header1 && other.header2 == header2 && other.header3 == header3 && other.backgroundColor == backgroundColor && other.radius == radius;
   }
 
   @override
-  int get hashCode =>
-      Object.hash(style, header1, header2, header3, backgroundColor, radius);
+  int get hashCode => Object.hash(style, header1, header2, header3, backgroundColor, radius);
 }
 
 @immutable
@@ -229,16 +237,17 @@ class DefaultStyles {
             const VerticalSpacing(0, 0),
             null),
         h2: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 24,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              height: 1.15,
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-            ),
-            const VerticalSpacing(8, 0),
-            const VerticalSpacing(0, 0),
-            null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 24,
+            color: defaultTextStyle.style.color!.withOpacity(0.70),
+            height: 1.15,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+          ),
+          const VerticalSpacing(8, 0),
+          const VerticalSpacing(0, 0),
+          null,
+        ),
         h3: DefaultTextBlockStyle(
           defaultTextStyle.style.copyWith(
             fontSize: 20,
@@ -374,6 +383,60 @@ class DefaultStyles {
       sizeSmall: other.sizeSmall ?? sizeSmall,
       sizeLarge: other.sizeLarge ?? sizeLarge,
       sizeHuge: other.sizeHuge ?? sizeHuge,
+    );
+  }
+
+  DefaultStyles copyWith({
+    DefaultTextBlockStyle? h1,
+    DefaultTextBlockStyle? h2,
+    DefaultTextBlockStyle? h3,
+    DefaultTextBlockStyle? paragraph,
+    TextStyle? bold,
+    TextStyle? subscript,
+    TextStyle? superscript,
+    TextStyle? italic,
+    TextStyle? small,
+    TextStyle? underline,
+    TextStyle? strikeThrough,
+    InlineCodeStyle? inlineCode,
+    TextStyle? sizeSmall,
+    TextStyle? sizeLarge,
+    TextStyle? sizeHuge,
+    TextStyle? link,
+    Color? color,
+    DefaultTextBlockStyle? placeHolder,
+    DefaultListBlockStyle? lists,
+    DefaultTextBlockStyle? quote,
+    DefaultTextBlockStyle? code,
+    DefaultTextBlockStyle? indent,
+    DefaultTextBlockStyle? align,
+    DefaultTextBlockStyle? leading,
+  }) {
+    return DefaultStyles(
+      h1: h1 ?? this.h1,
+      h2: h2 ?? this.h2,
+      h3: h3 ?? this.h3,
+      paragraph: paragraph ?? this.paragraph,
+      bold: bold ?? this.bold,
+      subscript: subscript ?? this.subscript,
+      superscript: superscript ?? this.superscript,
+      italic: italic ?? this.italic,
+      small: small ?? this.small,
+      underline: underline ?? this.underline,
+      strikeThrough: strikeThrough ?? this.strikeThrough,
+      inlineCode: inlineCode ?? this.inlineCode,
+      sizeSmall: sizeSmall ?? this.sizeSmall,
+      sizeLarge: sizeLarge ?? this.sizeLarge,
+      sizeHuge: sizeHuge ?? this.sizeHuge,
+      link: link ?? this.link,
+      color: color ?? this.color,
+      placeHolder: placeHolder ?? this.placeHolder,
+      lists: lists ?? this.lists,
+      quote: quote ?? this.quote,
+      code: code ?? this.code,
+      indent: indent ?? this.indent,
+      align: align ?? this.align,
+      leading: leading ?? this.leading,
     );
   }
 }
