@@ -56,7 +56,6 @@ class TextLine extends StatefulWidget {
   final CustomRecognizerBuilder? customRecognizerBuilder;
   final ValueChanged<String>? onLaunchUrl;
   final LinkActionPicker linkActionPicker;
-  final ValueChanged<String>? onLinkTapped;
   final List<String> customLinkPrefixes;
 
   @override
@@ -448,13 +447,9 @@ class _TextLineState extends State<TextLine> {
         _linkRecognizers[segment] = TapGestureRecognizer()
           ..onTap = () => _tapNodeLink(segment);
       } else {
-        if (widget.onLinkTapped == null) {
-          _linkRecognizers[segment] = LongPressGestureRecognizer()
+        _linkRecognizers[segment] = LongPressGestureRecognizer()
           ..onLongPress = () => _longPressLink(segment);
-        } else {
-          _linkRecognizers[segment] = TapGestureRecognizer()
-           ..onTap = () => _tapNodeLink(segment);
-        }
+        
       }
     }
     return _linkRecognizers[segment];
@@ -467,11 +462,7 @@ class _TextLineState extends State<TextLine> {
   void _tapNodeLink(Node node) {
     final link = node.style.attributes[Attribute.link.key]!.value;
 
-    if (widget.onLinkTapped == null) {
-      _tapLink(link);
-      return;
-    }
-    widget.onLinkTapped!.call(link);
+    _tapLink(link);
   }
 
   void _tapLink(String? link) {

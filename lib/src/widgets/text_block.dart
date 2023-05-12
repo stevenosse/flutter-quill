@@ -91,8 +91,6 @@ class EditableTextBlock extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final EmbedsBuilder embedBuilder;
   final LinkActionPicker linkActionPicker;
-  /// If this is specified, linkActionPicker should be ignored
-  final ValueChanged<String>? onLinkTapped;
   final ValueChanged<String>? onLaunchUrl;
   final CustomStyleBuilder? customStyleBuilder;
   final CursorCont cursorCont;
