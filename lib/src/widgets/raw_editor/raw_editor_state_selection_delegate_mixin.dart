@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_quill/src/models/documents/nodes/embeddable.dart';
 
 import '../../models/documents/document.dart';
 import '../../models/documents/nodes/embeddable.dart';
