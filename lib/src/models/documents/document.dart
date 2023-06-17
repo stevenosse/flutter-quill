@@ -211,9 +211,12 @@ class Document {
     final res = _root.queryChild(offset, true);
     if (res.node is Line) {
       return res;
+    } else if (res.node != null) {
+      final block = res.node as Block;
+      return block.queryChild(res.offset, true);
     }
-    final block = res.node as Block;
-    return block.queryChild(res.offset, true);
+
+    return ChildQuery(null, offset);
   }
 
   /// Search given [substring] in the whole document
@@ -293,8 +296,7 @@ class Document {
     delta = _transform(delta);
     final originalDelta = toDelta();
     for (final op in delta.toList()) {
-      final style =
-          op.attributes != null ? Style.fromJson(op.attributes) : null;
+      final style = op.attributes != null ? Style.fromJson(op.attributes) : null;
 
       if (op.isInsert) {
         // Must normalize data before inserting into the document, makes sure
@@ -347,25 +349,14 @@ class Document {
     return res;
   }
 
-  static void _autoAppendNewlineAfterEmbeddable(
-      int i, List<Operation> ops, Operation op, Delta res, String type) {
-    final nextOpIsEmbed = i + 1 < ops.length &&
-        ops[i + 1].isInsert &&
-        ops[i + 1].data is Map &&
-        (ops[i + 1].data as Map).containsKey(type);
-    if (nextOpIsEmbed &&
-        op.data is String &&
-        (op.data as String).isNotEmpty &&
-        !(op.data as String).endsWith('\n')) {
+  static void _autoAppendNewlineAfterEmbeddable(int i, List<Operation> ops, Operation op, Delta res, String type) {
+    final nextOpIsEmbed = i + 1 < ops.length && ops[i + 1].isInsert && ops[i + 1].data is Map && (ops[i + 1].data as Map).containsKey(type);
+    if (nextOpIsEmbed && op.data is String && (op.data as String).isNotEmpty && !(op.data as String).endsWith('\n')) {
       res.push(Operation.insert('\n'));
     }
     // embed could be image or video
-    final opInsertEmbed =
-        op.isInsert && op.data is Map && (op.data as Map).containsKey(type);
-    final nextOpIsLineBreak = i + 1 < ops.length &&
-        ops[i + 1].isInsert &&
-        ops[i + 1].data is String &&
-        (ops[i + 1].data as String).startsWith('\n');
+    final opInsertEmbed = op.isInsert && op.data is Map && (op.data as Map).containsKey(type);
+    final nextOpIsLineBreak = i + 1 < ops.length && ops[i + 1].isInsert && ops[i + 1].data is String && (ops[i + 1].data as String).startsWith('\n');
     if (opInsertEmbed && (i + 1 == ops.length - 1 || !nextOpIsLineBreak)) {
       // automatically append '\n' for embeddable
       res.push(Operation.insert('\n'));
@@ -407,20 +398,15 @@ class Document {
     var offset = 0;
     for (final op in doc.toList()) {
       if (!op.isInsert) {
-        throw ArgumentError.value(doc,
-            'Document can only contain insert operations but ${op.key} found.');
+        throw ArgumentError.value(doc, 'Document can only contain insert operations but ${op.key} found.');
       }
-      final style =
-          op.attributes != null ? Style.fromJson(op.attributes) : null;
+      final style = op.attributes != null ? Style.fromJson(op.attributes) : null;
       final data = _normalize(op.data);
       _root.insert(offset, data, style);
       offset += op.length!;
     }
     final node = _root.last;
-    if (node is Line &&
-        node.parent is! Block &&
-        node.style.isEmpty &&
-        _root.childCount > 1) {
+    if (node is Line && node.parent is! Block && node.style.isEmpty && _root.childCount > 1) {
       _root.remove(node);
     }
   }
@@ -436,9 +422,7 @@ class Document {
     }
 
     final delta = node.toDelta();
-    return delta.length == 1 &&
-        delta.first.data == '\n' &&
-        delta.first.key == 'insert';
+    return delta.length == 1 && delta.first.data == '\n' && delta.first.key == 'insert';
   }
 }
 
