@@ -157,6 +157,9 @@ class Document {
   Style collectStyle(int index, int len) {
     final res = queryChild(index);
     Style rangeStyle;
+    if (res.node is! Line) {
+      return const Style();
+    }
     if (len > 0) {
       return (res.node as Line).collectStyle(res.offset, len);
     }
